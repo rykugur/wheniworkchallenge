@@ -1,8 +1,9 @@
 package io.rollhax.nextripdomain.models;
 
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-public interface IRoute {
+public interface IRoute extends Parcelable {
 
     interface Json {
         String DESCRIPTION = "Description";

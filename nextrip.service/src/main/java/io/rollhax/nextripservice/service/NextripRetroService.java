@@ -13,6 +13,8 @@ import io.rollhax.nextripdomain.BuildConfig;
 import io.rollhax.nextripdomain.IDeparture;
 import io.rollhax.nextripdomain.IRoute;
 import io.rollhax.nextripdomain.IStop;
+import io.rollhax.utils.filters.FilterNull;
+import io.rollhax.utils.transformers.FlattenCollection;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -26,6 +28,7 @@ public class NextripRetroService implements INextripService {
 
     private static final long DEFAULT_CONNECT_TIMEOUT_SECONDS = 30;
     private static final long DEFAULT_READ_TIMEOUT_SECONDS = 30;
+    private static final long DEFAULT_WRITE_TIMEOUT_SECONDS = 30;
     private static final String BASE_URL = "http://svc.metrotransit.org/NexTrip/";
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
@@ -35,10 +38,16 @@ public class NextripRetroService implements INextripService {
     public NextripRetroService(Gson gson) {
         mGson = gson;
 
-        init(DEFAULT_CONNECT_TIMEOUT_SECONDS, DEFAULT_READ_TIMEOUT_SECONDS);
+        init(DEFAULT_CONNECT_TIMEOUT_SECONDS, DEFAULT_READ_TIMEOUT_SECONDS, DEFAULT_WRITE_TIMEOUT_SECONDS);
     }
 
-    private void init(long connectTimeout, long readTimeout) {
+    public NextripRetroService(Gson gson, long connectTimeout, long readTimeout, long writeTimeout) {
+        mGson = gson;
+
+        init(connectTimeout, readTimeout, writeTimeout);
+    }
+
+    private void init(long connectTimeout, long readTimeout, long writeTimeout) {
 
         OkHttpClient.Builder okhttpBuilder = new OkHttpClient.Builder();
 
@@ -51,6 +60,7 @@ public class NextripRetroService implements INextripService {
         OkHttpClient client = okhttpBuilder.addInterceptor(interceptor)
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -66,6 +76,11 @@ public class NextripRetroService implements INextripService {
     @Override
     public Observable<List<IRoute>> getRoutes() {
         return mNextripApi.getRoutes()
+                .compose(FlattenCollection.of(IRoute.class))
+                // get rid of junk data
+                .filter(FilterNull.of(IRoute.class))
+                .toList()
+                .toObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -73,13 +88,25 @@ public class NextripRetroService implements INextripService {
     @Override
     public Observable<List<IStop>> getStops(String route, String direction) {
         return mNextripApi.getStops(route, direction)
+                .compose(FlattenCollection.of(IStop.class))
+                // get rid of junk data
+                .filter(FilterNull.of(IStop.class))
+                .toList()
+                .toObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable<List<IDeparture>> getDepartures(int stopId) {
-        return null;
+        return mNextripApi.getDepartures(stopId)
+            .compose(FlattenCollection.of(IDeparture.class))
+                    // get rid of junk data
+                    .filter(FilterNull.of(IDeparture.class))
+                    .toList()
+                    .toObservable()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
     }
     //endregion
 }

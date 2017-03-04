@@ -1,7 +1,9 @@
 package io.rollhax.nextripdomain.models;
 
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -14,6 +16,7 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Type;
 import java.util.Date;
 
+import io.rollhax.nextripdomain.GsonFactory;
 import io.rollhax.nextripdomain.types.DirectionType;
 import io.rollhax.utils.serialization.json.annotations.SkipAutomaticDeserialization;
 import io.rollhax.utils.serialization.json.annotations.SkipAutomaticSerialization;
@@ -26,8 +29,6 @@ public class Stop implements IStop {
     private int mBlockNumber;
     @SerializedName(Json.DEPARTURE_TEXT)
     private String mDepartureText;
-    @SkipAutomaticSerialization
-    @SkipAutomaticDeserialization
     @SerializedName(Json.DEPARTURE_TIME)
     private Date mDepartureTime;
     @SerializedName(Json.DESCRIPTION)
@@ -48,6 +49,9 @@ public class Stop implements IStop {
     private long mVehicleLatitude;
     @SerializedName(Json.VEHICLE_LONGITUDE)
     private long mVehicleLongitude;
+
+    private Stop() {
+    }
 
     //region IStop
     @Override
@@ -183,20 +187,67 @@ public class Stop implements IStop {
     }
     //endregion
 
+    //region Parcelable
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    private Stop(Parcel in) {
+        mActual = in.readByte() == 1;
+        mBlockNumber = in.readInt();
+        mDepartureText = in.readString();
+        long tmpDate = in.readLong();
+        mDepartureTime =  tmpDate >= 0 ? new Date(tmpDate) : null;
+        mDescription = in.readString();
+        mGate = in.readString();
+        mRoute = in.readString();
+        mRouteDirection = DirectionType.from(in.readInt());
+        mTerminal = in.readString();
+        mVehicleHeading = in.readLong();
+        mVehicleLatitude = in.readLong();
+        mVehicleLongitude = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeByte(mActual ? (byte) 1 : (byte) 0);
+        parcel.writeInt(mBlockNumber);
+        parcel.writeString(mDepartureText);
+        parcel.writeLong(mDepartureTime != null ? mDepartureTime.getTime() : -1);
+        parcel.writeString(mDescription);
+        parcel.writeString(mGate);
+        parcel.writeString(mRoute);
+        parcel.writeInt(mRouteDirection.getServerId());
+        parcel.writeString(mTerminal);
+        parcel.writeLong(mVehicleHeading);
+        parcel.writeLong(mVehicleLatitude);
+        parcel.writeLong(mVehicleLongitude);
+    }
+
+    public static final Creator<Stop> CREATOR = new Creator<Stop>() {
+        @Override
+        public Stop createFromParcel(Parcel parcel) {
+            return new Stop(parcel);
+        }
+
+        @Override
+        public Stop[] newArray(int size) {
+            return new Stop[size];
+        }
+    };
+    //endregion
+
     //region Serdes
     public static class CustomDeserializer implements JsonDeserializer<Stop> {
+        private static final Gson GSON = GsonFactory.getDefault();
+
         @Override
-        public Stop deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Stop stop = new Stop();
+        public Stop deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+            Stop stop = GSON.fromJson(json, type);
 
             JsonObject root = json.getAsJsonObject();
 
-            if (root.has(Json.DEPARTURE_TIME)) {
-                JsonElement time = root.get(Json.DEPARTURE_TIME);
-                if (time != null && !time.isJsonNull() && time.isJsonPrimitive()) {
-                    String timeStr = time.getAsString();
-                }
-            }
             if (root.has(Json.ROUTE_DIRECTION)) {
                 JsonElement direction = root.get(Json.ROUTE_DIRECTION);
                 if (direction != null && !direction.isJsonNull() && direction.isJsonPrimitive()) {
@@ -210,9 +261,14 @@ public class Stop implements IStop {
     }
 
     public static class CustomSerializer implements JsonSerializer<Stop> {
+        private static final Gson GSON = GsonFactory.getDefault();
+
         @Override
         public JsonElement serialize(Stop src, Type typeOfSrc, JsonSerializationContext context) {
             // parse some fields automagically
+            JsonObject root = GSON.toJsonTree(src, Stop.class).getAsJsonObject();
+
+            root.addProperty(Json.ROUTE_DIRECTION, src.mRouteDirection.getServerId());
 
             return null;
         }

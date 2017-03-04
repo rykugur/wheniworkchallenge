@@ -1,12 +1,13 @@
 package io.rollhax.nextripdomain.models;
 
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import java.util.Date;
 
 import io.rollhax.nextripdomain.types.DirectionType;
 
-public interface IStop {
+public interface IStop extends Parcelable {
 
     interface Json {
         String ACTUAL = "Actual";

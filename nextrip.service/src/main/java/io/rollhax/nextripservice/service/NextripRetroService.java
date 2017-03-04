@@ -46,32 +46,6 @@ public class NextripRetroService implements INextripService {
 
         init(connectTimeout, readTimeout, writeTimeout);
     }
-
-    private void init(long connectTimeout, long readTimeout, long writeTimeout) {
-
-        OkHttpClient.Builder okhttpBuilder = new OkHttpClient.Builder();
-
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-
-        if (DEBUG) {
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        }
-
-        OkHttpClient client = okhttpBuilder.addInterceptor(interceptor)
-                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
-                .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(client)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(mGson))
-                .build();
-        mNextripApi = retrofit.create(NextripApi.class);
-    }
-
     //reigon INextripService
     @Override
     public Observable<List<IRoute>> getRoutes() {
@@ -108,5 +82,34 @@ public class NextripRetroService implements INextripService {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
     }
+    //endregion
+
+    //region Private helpers
+    private void init(long connectTimeout, long readTimeout, long writeTimeout) {
+        OkHttpClient.Builder okhttpBuilder = new OkHttpClient.Builder();
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+
+        if (DEBUG) {
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        }
+
+        // TODO: create interceptor with Content-Type/Accept headers == application/json
+        OkHttpClient client = okhttpBuilder
+                .addInterceptor(interceptor)
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(mGson))
+                .build();
+        mNextripApi = retrofit.create(NextripApi.class);
+    }
+
     //endregion
 }

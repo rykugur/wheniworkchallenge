@@ -1,4 +1,4 @@
-package io.rollhax.nextripdomain;
+package io.rollhax.nextripdomain.models;
 
 import android.support.annotation.Nullable;
 

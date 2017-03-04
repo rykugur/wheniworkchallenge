@@ -3,9 +3,9 @@ package api;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.rollhax.nextripdomain.IDeparture;
-import io.rollhax.nextripdomain.IRoute;
-import io.rollhax.nextripdomain.IStop;
+import io.rollhax.nextripdomain.models.IDeparture;
+import io.rollhax.nextripdomain.models.IRoute;
+import io.rollhax.nextripdomain.models.IStop;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 

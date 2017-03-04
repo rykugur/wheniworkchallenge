@@ -14,6 +14,9 @@ public interface NextripApi {
     @GET("Routes/?format=json")
     Observable<List<IRoute>> getRoutes();
 
+    @GET("Stops/{ROUTE}?format=json")
+    Observable<List<IStop>> getStops(@Path("ROUTE") String route);
+
     @GET("Stops/{ROUTE}/{DIRECTION}?format=json")
     Observable<List<IStop>> getStops(@Path("ROUTE") String route,
                                      @Path("DIRECTION") String direction);

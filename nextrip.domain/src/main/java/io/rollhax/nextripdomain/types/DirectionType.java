@@ -13,7 +13,7 @@ public enum DirectionType {
         mServerId = serverId;
     }
 
-    public int getmServerId() {
+    public int getServerId() {
         return mServerId;
     }
 

@@ -1,8 +1,9 @@
 package io.rollhax.utils.filters;
 
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
-public class FilterNull<T> implements Function<T, Boolean> {
+public class FilterNull<T> implements Predicate<T> {
 
     private FilterNull() {
         // use of(Class<Type> clazz)
@@ -13,7 +14,7 @@ public class FilterNull<T> implements Function<T, Boolean> {
     }
 
     @Override
-    public Boolean apply(T t) throws Exception {
+    public boolean test(T t) throws Exception {
         return t != null;
     }
 }

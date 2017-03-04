@@ -98,18 +98,6 @@ public class NextripRetroService implements INextripService {
     }
 
     @Override
-    public Observable<List<IStop>> getStops(String route, String direction) {
-        return mNextripApi.getStops(route, direction)
-                .compose(FlattenCollection.of(IStop.class))
-                // get rid of junk data
-                .filter(FilterNull.of(IStop.class))
-                .toList()
-                .toObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
     public Observable<List<IDeparture>> getDepartures(int stopId) {
         return mNextripApi.getDepartures(stopId)
             .compose(FlattenCollection.of(IDeparture.class))

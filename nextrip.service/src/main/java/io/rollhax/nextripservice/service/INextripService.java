@@ -6,13 +6,12 @@ import io.reactivex.Observable;
 import io.rollhax.nextripdomain.IDeparture;
 import io.rollhax.nextripdomain.IRoute;
 import io.rollhax.nextripdomain.IStop;
+import io.rollhax.nextripdomain.types.DirectionType;
 
 public interface INextripService {
     Observable<List<IRoute>> getRoutes();
 
     Observable<List<IStop>> getStops(String route);
-
-    Observable<List<IStop>> getStops(String route, String direction);
 
     Observable<List<IDeparture>> getDepartures(int stopId);
 }

@@ -11,12 +11,13 @@ import retrofit2.http.Path;
 
 public interface NextripApi {
 
-    @GET("Routes/?format=json")
+    @GET("Routes")
     Observable<List<IRoute>> getRoutes();
 
-    @GET("Stops/{ROUTE}?format=json")
-    Observable<List<IStop>> getStops(@Path("ROUTE") String route);
+    @GET("Stops/{ROUTE}/{DIRECTION}")
+    Observable<List<IStop>> getStops(@Path("ROUTE") String route,
+                                     @Path("DIRECTION") String direction);
 
-    @GET("{STOPID}?format=json")
+    @GET("{STOPID}")
     Observable<List<IDeparture>> getDepartures(@Path("STOPID") int stopId);
 }

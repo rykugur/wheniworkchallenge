@@ -2,7 +2,10 @@ package io.rollhax.nextripservice.service;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import api.NextripApi;
@@ -15,7 +18,11 @@ import io.rollhax.nextripdomain.models.IRoute;
 import io.rollhax.nextripdomain.models.IStop;
 import io.rollhax.utils.filters.FilterNull;
 import io.rollhax.utils.transformers.FlattenCollection;
+import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -60,8 +67,8 @@ public class NextripRetroService implements INextripService {
     }
 
     @Override
-    public Observable<List<IStop>> getStops(String route) {
-        return mNextripApi.getStops(route)
+    public Observable<List<IStop>> getStops(String route, String direction) {
+        return mNextripApi.getStops(route, direction)
                 .compose(FlattenCollection.of(IStop.class))
                 // get rid of junk data
                 .filter(FilterNull.of(IStop.class))
@@ -94,9 +101,9 @@ public class NextripRetroService implements INextripService {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         }
 
-        // TODO: create interceptor with Content-Type/Accept headers == application/json
         OkHttpClient client = okhttpBuilder
                 .addInterceptor(interceptor)
+                .addInterceptor(mHeaderIntercptor)
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
@@ -110,6 +117,18 @@ public class NextripRetroService implements INextripService {
                 .build();
         mNextripApi = retrofit.create(NextripApi.class);
     }
-
     //endregion
+
+    private static final Interceptor mHeaderIntercptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request original = chain.request();
+            Request.Builder builder = original.newBuilder();
+            builder.header("Content-Type", "application/json");
+            builder.header("Accept", "application/json");
+            builder.method(original.method(), original.body());
+            Request newRequest = builder.build();
+            return chain.proceed(newRequest);
+        }
+    };
 }

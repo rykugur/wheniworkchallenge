@@ -10,7 +10,7 @@ import io.rollhax.nextripdomain.models.IStop;
 public interface INextripService {
     Observable<List<IRoute>> getRoutes();
 
-    Observable<List<IStop>> getStops(String route);
+    Observable<List<IStop>> getStops(String route, String direction);
 
     Observable<List<IDeparture>> getDepartures(int stopId);
 }

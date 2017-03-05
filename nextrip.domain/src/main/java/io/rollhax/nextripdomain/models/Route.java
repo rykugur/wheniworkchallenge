@@ -22,15 +22,30 @@ public class Route implements IRoute {
     }
 
     @Override
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    @Override
     @Nullable
     public String getProviderId() {
         return mProviderId;
     }
 
     @Override
+    public void setProviderId(String providerId) {
+        mProviderId = providerId;
+    }
+
+    @Override
     @Nullable
     public String getRoute() {
         return mRoute;
+    }
+
+    @Override
+    public void setRoute(String route) {
+        mRoute = route;
     }
     //endregion
 
@@ -41,10 +56,16 @@ public class Route implements IRoute {
     }
 
     private Route(Parcel in) {
+        mDescription = in.readString();
+        mProviderId = in.readString();
+        mRoute = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mDescription);
+        parcel.writeString(mProviderId);
+        parcel.writeString(mRoute);
     }
 
     public static final Creator<Route> CREATOR = new Creator<Route>() {

@@ -14,12 +14,18 @@ public interface IRoute extends Parcelable {
     @Nullable
     String getDescription();
 
+    void setDescription(String description);
+
     /**
      * The NexTrip API returns this as a string, but it's labeled an ID. That is odd.
      */
     @Nullable
     String getProviderId();
 
+    void setProviderId(String providerId);
+
     @Nullable
     String getRoute();
+
+    void setRoute(String route);
 }

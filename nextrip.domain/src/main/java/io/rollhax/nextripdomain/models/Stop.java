@@ -40,10 +40,14 @@ public class Stop implements IStop {
     }
 
     private Stop(Parcel in) {
+        mStopDescription = in.readString();
+        mStopId = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mStopDescription);
+        parcel.writeString(mStopId);
     }
 
     public static final Creator<Stop> CREATOR = new Creator<Stop>() {

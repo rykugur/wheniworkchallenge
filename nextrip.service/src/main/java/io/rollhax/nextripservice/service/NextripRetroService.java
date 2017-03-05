@@ -11,13 +11,18 @@ import java.util.concurrent.TimeUnit;
 import api.NextripApi;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.rollhax.nextripdomain.BuildConfig;
 import io.rollhax.nextripdomain.models.IDeparture;
 import io.rollhax.nextripdomain.models.IRoute;
 import io.rollhax.nextripdomain.models.IStop;
+import io.rollhax.nextripdomain.models.TextValuePair;
+import io.rollhax.nextripdomain.types.DirectionType;
 import io.rollhax.utils.filters.FilterNull;
 import io.rollhax.utils.transformers.FlattenCollection;
+import mappers.DirectionTypeMapper;
+import mappers.StopMapper;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -67,11 +72,27 @@ public class NextripRetroService implements INextripService {
     }
 
     @Override
+    public Observable<List<DirectionType>> getDirections(String route) {
+        return mNextripApi.getDirections(route)
+                .compose(FlattenCollection.of(TextValuePair.class))
+                // get rid of junk data
+                .filter(FilterNull.of(TextValuePair.class))
+                // map from TextValuePair to DirectionType
+                .map(new DirectionTypeMapper())
+                .toList()
+                .toObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public Observable<List<IStop>> getStops(String route, String direction) {
         return mNextripApi.getStops(route, direction)
-                .compose(FlattenCollection.of(IStop.class))
+                .compose(FlattenCollection.of(TextValuePair.class))
                 // get rid of junk data
-                .filter(FilterNull.of(IStop.class))
+                .filter(FilterNull.of(TextValuePair.class))
+                // map from TextValuePair to Stop
+                .map(new StopMapper())
                 .toList()
                 .toObservable()
                 .subscribeOn(Schedulers.io())

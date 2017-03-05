@@ -2,7 +2,36 @@ package io.rollhax.nextripdomain.models;
 
 import android.os.Parcel;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Stop implements IStop {
+
+    @SerializedName(Json.DESCRIPTION)
+    private String mStopDescription;
+    @SerializedName(Json.STOP_ID)
+    private String mStopId;
+
+    //region IStop
+    @Override
+    public String getStopDescription() {
+        return mStopDescription;
+    }
+
+    @Override
+    public void setStopDescription(String stopDescription) {
+        mStopDescription = stopDescription;
+    }
+
+    @Override
+    public String getStopId() {
+        return mStopId;
+    }
+
+    @Override
+    public void setStopId(String stopId) {
+        mStopId = stopId;
+    }
+    //endregion
 
     //region Parcelable
     @Override

@@ -7,7 +7,6 @@ import java.text.DateFormat;
 
 import io.rollhax.nextripdomain.models.Departure;
 import io.rollhax.nextripdomain.models.IDeparture;
-import io.rollhax.nextripdomain.models.Stop;
 import io.rollhax.utils.serialization.json.strategy.DeserializationStrategy;
 import io.rollhax.utils.serialization.json.strategy.SerializationStrategy;
 

@@ -14,6 +14,9 @@ public class Route implements IRoute {
     @SerializedName(Json.ROUTE)
     private String mRoute;
 
+    public Route() {
+    }
+
     //region IRoute
     @Override
     @Nullable

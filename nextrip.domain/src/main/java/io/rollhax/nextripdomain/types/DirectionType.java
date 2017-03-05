@@ -1,5 +1,7 @@
 package io.rollhax.nextripdomain.types;
 
+import io.rollhax.nextripdomain.models.TextValuePair;
+
 public enum DirectionType {
     SOUTH(1),
     EAST(2),
@@ -28,5 +30,14 @@ public enum DirectionType {
         }
 
         return type;
+    }
+
+    public static DirectionType from(TextValuePair textValuePair) {
+        try {
+            int value = Integer.valueOf(textValuePair.getValue());
+            return from(value);
+        } catch (NumberFormatException e) {
+            return UNKNOWN;
+        }
     }
 }

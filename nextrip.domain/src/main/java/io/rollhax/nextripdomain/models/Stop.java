@@ -11,6 +11,11 @@ public class Stop implements IStop {
     @SerializedName(Json.STOP_ID)
     private String mStopId;
 
+    public Stop(TextValuePair textValuePair) {
+        mStopDescription = textValuePair.getText();
+        mStopId = textValuePair.getValue();
+    }
+
     //region IStop
     @Override
     public String getStopDescription() {

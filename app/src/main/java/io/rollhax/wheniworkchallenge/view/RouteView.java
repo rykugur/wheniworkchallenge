@@ -9,12 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.rollhax.wheniworkchallenge.R;
 
 public class RouteView extends LinearLayout implements IRouteItemView {
 
-    @BindView(R.id.view_route_card)
-    CardView mCard;
     @BindView(R.id.view_route_description_text)
     TextView mDescriptionText;
 
@@ -54,6 +53,8 @@ public class RouteView extends LinearLayout implements IRouteItemView {
     private void init(Context context) {
         mContext = context;
         inflate(mContext, R.layout.view_route, this);
+
+        ButterKnife.bind(this);
     }
     //endregion
 }

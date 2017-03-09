@@ -3,13 +3,16 @@ package io.rollhax.wheniworkchallenge.view.models;
 import android.os.Parcel;
 
 import io.rollhax.nextripdomain.models.Stop;
+import io.rollhax.nextripdomain.types.DirectionType;
 
 public class StopViewModel implements IStopViewModel {
 
     private Stop mWrappedStop;
+    private DirectionType mDirectionType;
 
-    public StopViewModel(Stop stop) {
+    public StopViewModel(Stop stop, DirectionType directionType) {
         mWrappedStop = stop;
+        mDirectionType = directionType;
     }
 
     //region IStopViewModel
@@ -21,6 +24,11 @@ public class StopViewModel implements IStopViewModel {
     @Override
     public String getStopId() {
         return mWrappedStop.getStopId();
+    }
+
+    @Override
+    public DirectionType getDirectionType() {
+        return mDirectionType;
     }
     //endregion
 

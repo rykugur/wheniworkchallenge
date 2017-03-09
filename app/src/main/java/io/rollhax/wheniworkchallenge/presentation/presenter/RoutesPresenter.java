@@ -14,7 +14,7 @@ import io.rollhax.utils.filters.FilterNull;
 import io.rollhax.utils.transformers.FlattenCollection;
 import io.rollhax.wheniworkchallenge.R;
 import io.rollhax.wheniworkchallenge.util.mapper.RouteViewModelMap;
-import io.rollhax.wheniworkchallenge.view.IRoutesListView;
+import io.rollhax.wheniworkchallenge.view.activity.IRoutesListView;
 import io.rollhax.wheniworkchallenge.view.models.IRouteViewModel;
 
 public class RoutesPresenter implements IRoutesPresenter {

@@ -1,4 +1,4 @@
-package io.rollhax.wheniworkchallenge;
+package io.rollhax.wheniworkchallenge.view.activity;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -17,11 +17,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.rollhax.wheniworkchallenge.BuildConfig;
+import io.rollhax.wheniworkchallenge.R;
 import io.rollhax.wheniworkchallenge.adapter.RoutesListAdapter;
 import io.rollhax.wheniworkchallenge.listener.IRouteClickListener;
 import io.rollhax.wheniworkchallenge.presentation.presenter.IRoutesPresenter;
 import io.rollhax.wheniworkchallenge.presentation.presenter.RoutesPresenter;
-import io.rollhax.wheniworkchallenge.view.IRoutesListView;
 import io.rollhax.wheniworkchallenge.view.models.IRouteViewModel;
 
 public class RoutesListActivity extends AppCompatActivity implements IRoutesListView {

@@ -1,4 +1,4 @@
-package io.rollhax.wheniworkchallenge.view;
+package io.rollhax.wheniworkchallenge.view.activity;
 
 import android.support.annotation.StringRes;
 

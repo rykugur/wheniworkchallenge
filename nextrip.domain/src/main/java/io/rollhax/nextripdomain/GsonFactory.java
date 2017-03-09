@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import java.text.DateFormat;
 
 import io.rollhax.nextripdomain.models.Departure;
-import io.rollhax.nextripdomain.models.IDeparture;
 import io.rollhax.utils.serialization.json.strategy.DeserializationStrategy;
 import io.rollhax.utils.serialization.json.strategy.SerializationStrategy;
 
@@ -29,9 +28,9 @@ public class GsonFactory {
                 .setDateFormat(DateFormat.FULL)
 
                 // register deserializers
-                .registerTypeAdapter(IDeparture.class, new Departure.CustomDeserializer())
+                .registerTypeAdapter(Departure.class, new Departure.CustomDeserializer())
                 // register serializers
-                .registerTypeAdapter(IDeparture.class, new Departure.CustomSerializer())
+                .registerTypeAdapter(Departure.class, new Departure.CustomSerializer())
 
                 .create();
     }

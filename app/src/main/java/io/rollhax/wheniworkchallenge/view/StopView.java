@@ -18,6 +18,8 @@ public class StopView extends LinearLayout implements IStopItemView {
 
     @BindView(R.id.view_stop_description_text)
     TextView mDescriptionText;
+    @BindView(R.id.view_stop_direction_text)
+    TextView mDirectionText;
 
     private Context mContext;
     private IStopClickListener mListener;
@@ -52,6 +54,8 @@ public class StopView extends LinearLayout implements IStopItemView {
         mStop = stop;
 
         mDescriptionText.setText(stop.getStopDescription());
+        mDirectionText.setText(getResources().getString(R.string.stops_list_direction_format,
+                stop.getDirectionType().name()));
     }
 
     @Override

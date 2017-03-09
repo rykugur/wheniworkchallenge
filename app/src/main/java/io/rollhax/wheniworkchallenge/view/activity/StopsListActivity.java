@@ -26,6 +26,7 @@ import io.rollhax.wheniworkchallenge.adapter.StopsListAdapter;
 import io.rollhax.wheniworkchallenge.listener.IStopClickListener;
 import io.rollhax.wheniworkchallenge.presentation.presenter.IStopsPresenter;
 import io.rollhax.wheniworkchallenge.presentation.presenter.StopsPresenter;
+import io.rollhax.wheniworkchallenge.view.IStopsListView;
 import io.rollhax.wheniworkchallenge.view.models.IStopViewModel;
 
 public class StopsListActivity extends AppCompatActivity implements IStopsListView {
@@ -33,7 +34,7 @@ public class StopsListActivity extends AppCompatActivity implements IStopsListVi
     private static final String TAG = StopsListActivity.class.getSimpleName();
 
     private static final String EXTRAS_ROUTE = BuildConfig.APPLICATION_ID + ".StopsListActivity.route";
-    private static final String EXTRAS_STOPS = BuildConfig.APPLICATION_ID + ".StopsListActivity.stops";
+    private static final String EXTRAS_STOPS_LIST = BuildConfig.APPLICATION_ID + ".StopsListActivity.stops";
 
     public static void startStopsListActivity(@NonNull Context context, @NonNull String route) {
         Intent intent = new Intent(context, StopsListActivity.class);
@@ -52,70 +53,43 @@ public class StopsListActivity extends AppCompatActivity implements IStopsListVi
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
 
-    //region IListView
-    @Override
-    public void setListItems(List<IStopViewModel> stops) {
-        mStops = stops;
-    }
-
-    @Override
-    public void displayListItems(List<IStopViewModel> stops) {
-        mStopsListAdapter.setStops(stops);
-    }
-    //endregion
-
-    //region IBaseView
-    @Override
-    public void showProgress(boolean show) {
-        mSwipeRefresh.setRefreshing(show);
-    }
-
-    @Override
-    public void showError(@StringRes int error) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
-    }
-    //endregion
-
     //region Lifecycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_routes);
+        setContentView(R.layout.activity_stops);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.stops_list_title));
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
 
-        mSwipeRefresh.setOnRefreshListener(mSwipeRefreshListener);
+        Bundle args = getIntent().getExtras();
+        if (savedInstanceState != null) {
+            mRoute = savedInstanceState.getString(EXTRAS_ROUTE);
+            loadStopsFromBundle(savedInstanceState);
+        } else if (args != null) {
+            mRoute = args.getString(EXTRAS_ROUTE);
+            loadStopsFromBundle(args);
+        }
 
         mStopsListAdapter = new StopsListAdapter(mStops, mStopClickListener);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setAdapter(mStopsListAdapter);
 
-        Bundle args = getIntent().getExtras();
-        if (savedInstanceState != null) {
-            mRoute = savedInstanceState.getString(EXTRAS_ROUTE);
-            mStops = savedInstanceState.getParcelableArrayList(EXTRAS_STOPS);
-        } else if (args != null) {
-            mRoute = args.getString(EXTRAS_ROUTE);
-        }
+        mSwipeRefresh.setOnRefreshListener(mRefreshListener);
 
         mStopsPresenter = new StopsPresenter();
         mStopsPresenter.onCreate(this);
         mStopsPresenter.setRoute(mRoute);
 
-        if (mStops != null) {
-            displayListItems(mStops);
-        } else {
-            mStopsPresenter.onRefresh();
-        }
+        mStopsPresenter.onRefresh();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_routes, menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
         return true;
     }
 
@@ -135,12 +109,37 @@ public class StopsListActivity extends AppCompatActivity implements IStopsListVi
         super.onSaveInstanceState(outState);
 
         outState.putString(EXTRAS_ROUTE, mRoute);
-        outState.putParcelableArrayList(EXTRAS_STOPS, (ArrayList) mStops);
+        saveStopsToBundle(outState);
     }
     //endregion
 
+    //region IBaseView
+    @Override
+    public void showProgress(boolean show) {
+        mSwipeRefresh.setRefreshing(show);
+    }
+
+    @Override
+    public void showError(@StringRes int error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+    //endregion
+
+    //region IStopsListView
+    @Override
+    public void setListItems(List<IStopViewModel> list) {
+        mStops = list;
+    }
+
+    @Override
+    public void displayListItems(List<IStopViewModel> list) {
+        mStopsListAdapter.setStops(list);
+    }
+
+    //endregion
+
     //region Listeners
-    private final SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    private final SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             mStopsPresenter.onSwipeToRefresh();
@@ -150,8 +149,18 @@ public class StopsListActivity extends AppCompatActivity implements IStopsListVi
     private final IStopClickListener mStopClickListener = new IStopClickListener() {
         @Override
         public void onStopClicked(IStopViewModel stop) {
-            Log.d(TAG, "onStopClicked: stop=" + stop.getStopId());
+            Log.d(TAG, "onStopClicked: stop=" + stop.getStopId() + ", direction=" + stop.getDirectionType().name());
         }
     };
+    //endregion
+
+    //region Private helpers
+    private void loadStopsFromBundle(@NonNull Bundle bundle) {
+        mStops = bundle.getParcelableArrayList(EXTRAS_STOPS_LIST);
+    }
+
+    private void saveStopsToBundle(@NonNull Bundle bundle) {
+        bundle.putParcelableArrayList(EXTRAS_STOPS_LIST, (ArrayList) mStops);
+    }
     //endregion
 }

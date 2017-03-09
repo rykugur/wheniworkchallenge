@@ -18,11 +18,24 @@
         card_view:cardUseCompatPadding="true"
         card_view:cardCornerRadius="4dp">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/view_stop_description_text"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="@dimen/padding_large"
-            tools:text="Chicago Lake Transit Center"/>
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/view_stop_description_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Chicago Lake Transit Center"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/view_stop_direction_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"
+                tools:text="DIRECTION: NORTHBOUND"/>
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -3,6 +3,10 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+    <!--Text-->
+    <dimen name="text_size_x_small">8sp</dimen>
+    <dimen name="text_size_small">10sp</dimen>
+
     <!-- Padding -->
     <dimen name="padding_standard">5dp</dimen>
     <dimen name="padding_large">15dp</dimen>

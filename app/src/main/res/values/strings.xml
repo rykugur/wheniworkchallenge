@@ -3,5 +3,6 @@
     <string name="action_settings">Settings</string>
 
     <!--RoutesListActivity-->
-    <string name="routes_error_refresh">Error refreshing departures</string>
+    <string name="routes_list_title">Routes</string>
+    <string name="routes_list_error_refresh">Error refreshing departures</string>
 </resources>

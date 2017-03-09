@@ -74,7 +74,7 @@ public class RoutesPresenter implements IRoutesPresenter {
 
             Log.d(TAG, "onError: e=" + e.getMessage());
 
-            mPresentation.showError(R.string.routes_error_refresh);
+            mPresentation.showError(R.string.routes_list_error_refresh);
         }
 
         @Override

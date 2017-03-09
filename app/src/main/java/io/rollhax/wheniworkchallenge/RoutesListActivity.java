@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,6 +28,8 @@ import io.rollhax.wheniworkchallenge.view.models.IRouteViewModel;
 public class RoutesListActivity extends AppCompatActivity implements IRoutesListView {
 
     private static final String TAG = RoutesListActivity.class.getSimpleName();
+
+    private static final String EXTRAS_ROUTES = BuildConfig.APPLICATION_ID + ".RoutesListActivity.routesList";
 
     private IRoutesPresenter mRoutesPresenter;
     private RoutesListAdapter mRoutesListAdapter;
@@ -67,6 +70,7 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
 
         setContentView(R.layout.activity_routes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.routes_list_title));
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
@@ -79,7 +83,16 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
 
         mRoutesPresenter = new RoutesPresenter();
         mRoutesPresenter.onCreate(this);
-        mRoutesPresenter.onRefresh();
+
+        if (savedInstanceState != null) {
+            mRoutes = savedInstanceState.getParcelableArrayList(EXTRAS_ROUTES);
+        }
+
+        if (mRoutes != null) {
+            displayRoutes(mRoutes);
+        } else {
+            mRoutesPresenter.onRefresh();
+        }
     }
 
     @Override
@@ -101,6 +114,13 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(EXTRAS_ROUTES, (ArrayList) mRoutes);
     }
     //endregion
 

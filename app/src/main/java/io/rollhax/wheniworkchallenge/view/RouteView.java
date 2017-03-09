@@ -3,14 +3,16 @@ package io.rollhax.wheniworkchallenge.view;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.rollhax.wheniworkchallenge.R;
+import io.rollhax.wheniworkchallenge.listener.IRouteClickListener;
+import io.rollhax.wheniworkchallenge.view.models.IRouteViewModel;
 
 public class RouteView extends LinearLayout implements IRouteItemView {
 
@@ -18,6 +20,8 @@ public class RouteView extends LinearLayout implements IRouteItemView {
     TextView mDescriptionText;
 
     private Context mContext;
+    private IRouteClickListener mListener;
+    private IRouteViewModel mRoute;
 
     //region Constructors
     public RouteView(Context context) {
@@ -44,9 +48,27 @@ public class RouteView extends LinearLayout implements IRouteItemView {
 
     //region IRouteItemView
     @Override
-    public void setDescriptionText(String descriptionText) {
-        mDescriptionText.setText(descriptionText);
+    public void showRoute(IRouteViewModel route) {
+        mRoute = route;
+
+        mDescriptionText.setText(mRoute.getDescription());
     }
+
+    @Override
+    public void setRouteClickListener(IRouteClickListener listener) {
+        mListener = listener;
+    }
+    //endregion
+
+    //region Listeners
+    private final OnClickListener mOnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (mListener != null) {
+                mListener.onRouteClicked(mRoute);
+            }
+        }
+    };
     //endregion
 
     //region Private helpers
@@ -55,6 +77,8 @@ public class RouteView extends LinearLayout implements IRouteItemView {
         inflate(mContext, R.layout.view_route, this);
 
         ButterKnife.bind(this);
+
+        setOnClickListener(mOnClickListener);
     }
     //endregion
 }

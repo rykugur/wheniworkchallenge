@@ -2,13 +2,13 @@ package io.rollhax.wheniworkchallenge;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -17,14 +17,21 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.rollhax.nextripdomain.models.Route;
+import io.rollhax.wheniworkchallenge.adapter.RoutesListAdapter;
+import io.rollhax.wheniworkchallenge.listener.IRouteClickListener;
 import io.rollhax.wheniworkchallenge.presentation.presenter.IRoutesPresenter;
 import io.rollhax.wheniworkchallenge.presentation.presenter.RoutesPresenter;
 import io.rollhax.wheniworkchallenge.view.IRoutesListView;
+import io.rollhax.wheniworkchallenge.view.models.IRouteViewModel;
 
 public class RoutesListActivity extends AppCompatActivity implements IRoutesListView {
 
+    private static final String TAG = RoutesListActivity.class.getSimpleName();
+
     private IRoutesPresenter mRoutesPresenter;
+    private RoutesListAdapter mRoutesListAdapter;
+
+    private List<IRouteViewModel> mRoutes;
 
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefresh;
@@ -33,7 +40,13 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
 
     //region IRoutesListView
     @Override
-    public void displayRoutes(List<Route> routes) {
+    public void setRoutes(List<IRouteViewModel> routes) {
+        mRoutes = routes;
+    }
+
+    @Override
+    public void displayRoutes(List<IRouteViewModel> routes) {
+        mRoutesListAdapter.setRoutes(routes);
     }
 
     @Override
@@ -52,22 +65,17 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_routes2);
+        setContentView(R.layout.activity_routes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         ButterKnife.bind(this);
 
         mSwipeRefresh.setOnRefreshListener(mSwipeRefreshListener);
+
+        mRoutesListAdapter = new RoutesListAdapter(mRoutes, mRouteClickListener);
+        mRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mRecycler.setAdapter(mRoutesListAdapter);
 
         mRoutesPresenter = new RoutesPresenter();
         mRoutesPresenter.onCreate(this);
@@ -101,6 +109,13 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
         @Override
         public void onRefresh() {
             mRoutesPresenter.onRefresh();
+        }
+    };
+
+    private final IRouteClickListener mRouteClickListener = new IRouteClickListener() {
+        @Override
+        public void onRouteClicked(IRouteViewModel route) {
+            Log.d(TAG, "onRouteClicked: route=" + route.getRoute());
         }
     };
     //endregion

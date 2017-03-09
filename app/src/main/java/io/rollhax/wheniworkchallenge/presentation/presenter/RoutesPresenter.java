@@ -10,8 +10,12 @@ import io.rollhax.nextripdomain.GsonFactory;
 import io.rollhax.nextripdomain.models.Route;
 import io.rollhax.nextripservice.service.INextripService;
 import io.rollhax.nextripservice.service.NextripRetroService;
+import io.rollhax.utils.filters.FilterNull;
+import io.rollhax.utils.transformers.FlattenCollection;
 import io.rollhax.wheniworkchallenge.R;
+import io.rollhax.wheniworkchallenge.util.mapper.RouteViewModelMap;
 import io.rollhax.wheniworkchallenge.view.IRoutesListView;
+import io.rollhax.wheniworkchallenge.view.models.IRouteViewModel;
 
 public class RoutesPresenter implements IRoutesPresenter {
 
@@ -43,14 +47,14 @@ public class RoutesPresenter implements IRoutesPresenter {
     //endregion
 
     //region Listeners/observers
-    private final Observer<List<Route>> mRoutesObserver = new Observer<List<Route>>() {
+    private final Observer<List<IRouteViewModel>> mRoutesObserver = new Observer<List<IRouteViewModel>>() {
         @Override
         public void onSubscribe(Disposable d) {
             Log.d(TAG, "onSubscribe: ");
         }
 
         @Override
-        public void onNext(List<Route> routes) {
+        public void onNext(List<IRouteViewModel> routes) {
             if (mPresentation == null) {
                 return;
             }
@@ -58,6 +62,8 @@ public class RoutesPresenter implements IRoutesPresenter {
             Log.d(TAG, "onNext: value.size=" + routes.size());
 
             mPresentation.showProgress(false);
+            mPresentation.setRoutes(routes);
+            mPresentation.displayRoutes(routes);
         }
 
         @Override
@@ -85,7 +91,13 @@ public class RoutesPresenter implements IRoutesPresenter {
         }
 
         mPresentation.showProgress(true);
-        mNextripService.getRoutes().subscribe(mRoutesObserver);
+        mNextripService.getRoutes()
+                .compose(FlattenCollection.of(Route.class))
+                .filter(FilterNull.of(Route.class))
+                .map(new RouteViewModelMap())
+                .toList()
+                .toObservable()
+                .subscribe(mRoutesObserver);
     }
     //endregion
 }

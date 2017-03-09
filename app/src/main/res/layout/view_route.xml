@@ -15,6 +15,7 @@
         android:layout_marginStart="@dimen/margin_standard"
         android:layout_marginRight="@dimen/margin_standard"
         android:layout_marginEnd="@dimen/margin_standard"
+        card_view:cardUseCompatPadding="true"
         card_view:cardCornerRadius="4dp">
 
         <android.support.v7.widget.AppCompatTextView

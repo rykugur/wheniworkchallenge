@@ -41,7 +41,7 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
 
-    //region IRoutesListView
+    //region IListView
     @Override
     public void setRoutes(List<IRouteViewModel> routes) {
         mRoutes = routes;
@@ -51,7 +51,9 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
     public void displayRoutes(List<IRouteViewModel> routes) {
         mRoutesListAdapter.setRoutes(routes);
     }
+    //endregion
 
+    //region IBaseView
     @Override
     public void showProgress(boolean show) {
         mSwipeRefresh.setRefreshing(show);

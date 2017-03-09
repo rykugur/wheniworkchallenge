@@ -1,4 +1,9 @@
 package io.rollhax.wheniworkchallenge.view.models;
 
-public interface IStopViewModel {
+import android.os.Parcelable;
+
+public interface IStopViewModel extends Parcelable {
+    String getStopDescription();
+
+    String getStopId();
 }

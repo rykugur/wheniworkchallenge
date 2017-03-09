@@ -82,6 +82,11 @@ public class NextripRetroService implements INextripService {
     }
 
     @Override
+    public Observable<List<Stop>> getStops(String route, int directionTypeId) {
+        return getStops(route, String.valueOf(directionTypeId));
+    }
+
+    @Override
     public Observable<List<Stop>> getStops(String route, String direction) {
         return mNextripApi.getStops(route, direction)
                 .compose(FlattenCollection.of(TextValuePair.class))

@@ -13,6 +13,8 @@ public interface INextripService {
 
     Observable<List<DirectionType>> getDirections(String route);
 
+    Observable<List<Stop>> getStops(String route, int directionTypeId);
+
     Observable<List<Stop>> getStops(String route, String direction);
 
     Observable<List<Departure>> getDepartures(int stopId);

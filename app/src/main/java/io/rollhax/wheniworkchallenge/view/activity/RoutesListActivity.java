@@ -43,12 +43,12 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
 
     //region IListView
     @Override
-    public void setRoutes(List<IRouteViewModel> routes) {
+    public void setListItems(List<IRouteViewModel> routes) {
         mRoutes = routes;
     }
 
     @Override
-    public void displayRoutes(List<IRouteViewModel> routes) {
+    public void displayListItems(List<IRouteViewModel> routes) {
         mRoutesListAdapter.setRoutes(routes);
     }
     //endregion
@@ -91,7 +91,7 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
         }
 
         if (mRoutes != null) {
-            displayRoutes(mRoutes);
+            displayListItems(mRoutes);
         } else {
             mRoutesPresenter.onRefresh();
         }

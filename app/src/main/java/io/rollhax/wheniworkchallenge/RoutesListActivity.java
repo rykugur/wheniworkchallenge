@@ -1,21 +1,53 @@
 package io.rollhax.wheniworkchallenge;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.rollhax.nextripdomain.models.Route;
 import io.rollhax.wheniworkchallenge.presentation.presenter.IRoutesPresenter;
 import io.rollhax.wheniworkchallenge.presentation.presenter.RoutesPresenter;
+import io.rollhax.wheniworkchallenge.view.IRoutesListView;
 
-public class RoutesActivity extends AppCompatActivity {
+public class RoutesListActivity extends AppCompatActivity implements IRoutesListView {
 
     private IRoutesPresenter mRoutesPresenter;
 
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefresh;
+    @BindView(R.id.recycler)
+    RecyclerView mRecycler;
+
+    //region IRoutesListView
+    @Override
+    public void displayRoutes(List<Route> routes) {
+    }
+
+    @Override
+    public void showProgress(boolean show) {
+        mSwipeRefresh.setRefreshing(show);
+    }
+
+    @Override
+    public void showError(@StringRes int error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+    //endregion
+
+    //region Lifecycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +65,13 @@ public class RoutesActivity extends AppCompatActivity {
             }
         });
 
-        mRoutesPresenter = new RoutesPresenter();
+        ButterKnife.bind(this);
 
+        mSwipeRefresh.setOnRefreshListener(mSwipeRefreshListener);
+
+        mRoutesPresenter = new RoutesPresenter();
+        mRoutesPresenter.onCreate(this);
+        mRoutesPresenter.onRefresh();
     }
 
     @Override
@@ -57,4 +94,14 @@ public class RoutesActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    //endregion
+
+    //region Listeners
+    private final SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            mRoutesPresenter.onRefresh();
+        }
+    };
+    //endregion
 }

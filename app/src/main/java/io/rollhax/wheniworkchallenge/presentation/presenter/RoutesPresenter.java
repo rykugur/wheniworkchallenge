@@ -59,7 +59,7 @@ public class RoutesPresenter implements IRoutesPresenter {
                 return;
             }
 
-            Log.d(TAG, "onNext: value.size=" + routes.size());
+            Log.d(TAG, "onNext: routes.size=" + routes.size());
 
             mPresentation.showProgress(false);
             mPresentation.setRoutes(routes);

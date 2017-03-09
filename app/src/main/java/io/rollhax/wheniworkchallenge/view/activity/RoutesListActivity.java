@@ -130,7 +130,7 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
     private final SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            mRoutesPresenter.onRefresh();
+            mRoutesPresenter.onSwipeToRefresh();
         }
     };
 

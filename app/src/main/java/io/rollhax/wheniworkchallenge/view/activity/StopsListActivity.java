@@ -1,6 +1,9 @@
 package io.rollhax.wheniworkchallenge.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,23 +22,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.rollhax.wheniworkchallenge.BuildConfig;
 import io.rollhax.wheniworkchallenge.R;
-import io.rollhax.wheniworkchallenge.adapter.RoutesListAdapter;
 import io.rollhax.wheniworkchallenge.adapter.StopsListAdapter;
-import io.rollhax.wheniworkchallenge.listener.IRouteClickListener;
-import io.rollhax.wheniworkchallenge.presentation.presenter.IRoutesPresenter;
-import io.rollhax.wheniworkchallenge.presentation.presenter.RoutesPresenter;
-import io.rollhax.wheniworkchallenge.view.models.IRouteViewModel;
+import io.rollhax.wheniworkchallenge.listener.IStopClickListener;
+import io.rollhax.wheniworkchallenge.presentation.presenter.IStopsPresenter;
+import io.rollhax.wheniworkchallenge.presentation.presenter.StopsPresenter;
+import io.rollhax.wheniworkchallenge.view.models.IStopViewModel;
 
-public class RoutesListActivity extends AppCompatActivity implements IRoutesListView {
+public class StopsListActivity extends AppCompatActivity implements IStopsListView {
 
-    private static final String TAG = RoutesListActivity.class.getSimpleName();
+    private static final String TAG = StopsListActivity.class.getSimpleName();
 
-    private static final String EXTRAS_ROUTES = BuildConfig.APPLICATION_ID + ".RoutesListActivity.routesList";
+    private static final String EXTRAS_ROUTE = BuildConfig.APPLICATION_ID + ".StopsListActivity.route";
+    private static final String EXTRAS_STOPS = BuildConfig.APPLICATION_ID + ".StopsListActivity.stops";
 
-    private IRoutesPresenter mRoutesPresenter;
-    private RoutesListAdapter mRoutesListAdapter;
+    public static void startStopsListActivity(@NonNull Context context, @NonNull String route) {
+        Intent intent = new Intent(context, StopsListActivity.class);
+        intent.putExtra(EXTRAS_ROUTE, route);
+        context.startActivity(intent);
+    }
 
-    private List<IRouteViewModel> mRoutes;
+    private IStopsPresenter mStopsPresenter;
+    private StopsListAdapter mStopsListAdapter;
+
+    private String mRoute;
+    private List<IStopViewModel> mStops;
 
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefresh;
@@ -44,13 +54,13 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
 
     //region IListView
     @Override
-    public void setListItems(List<IRouteViewModel> routes) {
-        mRoutes = routes;
+    public void setListItems(List<IStopViewModel> stops) {
+        mStops = stops;
     }
 
     @Override
-    public void displayListItems(List<IRouteViewModel> routes) {
-        mRoutesListAdapter.setRoutes(routes);
+    public void displayListItems(List<IStopViewModel> stops) {
+        mStopsListAdapter.setStops(stops);
     }
     //endregion
 
@@ -73,43 +83,44 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
 
         setContentView(R.layout.activity_routes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.routes_list_title));
+        toolbar.setTitle(getString(R.string.stops_list_title));
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
 
         mSwipeRefresh.setOnRefreshListener(mSwipeRefreshListener);
 
-        mRoutesListAdapter = new RoutesListAdapter(mRoutes, mRouteClickListener);
+        mStopsListAdapter = new StopsListAdapter(mStops, mStopClickListener);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mRecycler.setAdapter(mRoutesListAdapter);
+        mRecycler.setAdapter(mStopsListAdapter);
 
-        mRoutesPresenter = new RoutesPresenter();
-        mRoutesPresenter.onCreate(this);
-
+        Bundle args = getIntent().getExtras();
         if (savedInstanceState != null) {
-            mRoutes = savedInstanceState.getParcelableArrayList(EXTRAS_ROUTES);
+            mRoute = savedInstanceState.getString(EXTRAS_ROUTE);
+            mStops = savedInstanceState.getParcelableArrayList(EXTRAS_STOPS);
+        } else if (args != null) {
+            mRoute = args.getString(EXTRAS_ROUTE);
         }
 
-        if (mRoutes != null) {
-            displayListItems(mRoutes);
+        mStopsPresenter = new StopsPresenter();
+        mStopsPresenter.onCreate(this);
+        mStopsPresenter.setRoute(mRoute);
+
+        if (mStops != null) {
+            displayListItems(mStops);
         } else {
-            mRoutesPresenter.onRefresh();
+            mStopsPresenter.onRefresh();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_routes, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -123,7 +134,8 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelableArrayList(EXTRAS_ROUTES, (ArrayList) mRoutes);
+        outState.putString(EXTRAS_ROUTE, mRoute);
+        outState.putParcelableArrayList(EXTRAS_STOPS, (ArrayList) mStops);
     }
     //endregion
 
@@ -131,14 +143,14 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
     private final SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            mRoutesPresenter.onSwipeToRefresh();
+            mStopsPresenter.onSwipeToRefresh();
         }
     };
 
-    private final IRouteClickListener mRouteClickListener = new IRouteClickListener() {
+    private final IStopClickListener mStopClickListener = new IStopClickListener() {
         @Override
-        public void onRouteClicked(IRouteViewModel route) {
-            StopsListActivity.startStopsListActivity(RoutesListActivity.this, route.getRoute());
+        public void onStopClicked(IStopViewModel stop) {
+            Log.d(TAG, "onStopClicked: stop=" + stop.getStopId());
         }
     };
     //endregion

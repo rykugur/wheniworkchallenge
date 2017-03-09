@@ -1,4 +1,6 @@
 package io.rollhax.wheniworkchallenge.view.activity;
 
-public interface IStopsListView {
+import io.rollhax.wheniworkchallenge.view.models.IStopViewModel;
+
+public interface IStopsListView extends IListView<IStopViewModel>, IBaseView {
 }

@@ -5,4 +5,8 @@
     <!--RoutesListActivity-->
     <string name="routes_list_title">Routes</string>
     <string name="routes_list_error_refresh">Error refreshing departures</string>
+
+    <!--StopsListActivity-->
+    <string name="stops_list_title">Stops</string>
+    <string name="stops_list_error_refresh">Error refreshing stops</string>
 </resources>

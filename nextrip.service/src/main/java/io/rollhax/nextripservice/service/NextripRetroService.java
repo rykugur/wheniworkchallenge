@@ -3,27 +3,23 @@ package io.rollhax.nextripservice.service;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import api.NextripApi;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.rollhax.nextripdomain.BuildConfig;
-import io.rollhax.nextripdomain.models.IDeparture;
-import io.rollhax.nextripdomain.models.IRoute;
-import io.rollhax.nextripdomain.models.IStop;
+import io.rollhax.nextripdomain.models.Departure;
+import io.rollhax.nextripdomain.models.Route;
+import io.rollhax.nextripdomain.models.Stop;
 import io.rollhax.nextripdomain.models.TextValuePair;
 import io.rollhax.nextripdomain.types.DirectionType;
 import io.rollhax.utils.filters.FilterNull;
 import io.rollhax.utils.transformers.FlattenCollection;
 import mappers.DirectionTypeMapper;
 import mappers.StopMapper;
-import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -60,11 +56,11 @@ public class NextripRetroService implements INextripService {
     }
     //reigon INextripService
     @Override
-    public Observable<List<IRoute>> getRoutes() {
+    public Observable<List<Route>> getRoutes() {
         return mNextripApi.getRoutes()
-                .compose(FlattenCollection.of(IRoute.class))
+                .compose(FlattenCollection.of(Route.class))
                 // get rid of junk data
-                .filter(FilterNull.of(IRoute.class))
+                .filter(FilterNull.of(Route.class))
                 .toList()
                 .toObservable()
                 .subscribeOn(Schedulers.io())
@@ -86,7 +82,7 @@ public class NextripRetroService implements INextripService {
     }
 
     @Override
-    public Observable<List<IStop>> getStops(String route, String direction) {
+    public Observable<List<Stop>> getStops(String route, String direction) {
         return mNextripApi.getStops(route, direction)
                 .compose(FlattenCollection.of(TextValuePair.class))
                 // get rid of junk data
@@ -100,11 +96,11 @@ public class NextripRetroService implements INextripService {
     }
 
     @Override
-    public Observable<List<IDeparture>> getDepartures(int stopId) {
+    public Observable<List<Departure>> getDepartures(int stopId) {
         return mNextripApi.getDepartures(stopId)
-            .compose(FlattenCollection.of(IDeparture.class))
+            .compose(FlattenCollection.of(Departure.class))
                     // get rid of junk data
-                    .filter(FilterNull.of(IDeparture.class))
+                    .filter(FilterNull.of(Departure.class))
                     .toList()
                     .toObservable()
                     .subscribeOn(Schedulers.io())

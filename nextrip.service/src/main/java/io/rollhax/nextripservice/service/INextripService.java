@@ -3,17 +3,17 @@ package io.rollhax.nextripservice.service;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.rollhax.nextripdomain.models.IDeparture;
-import io.rollhax.nextripdomain.models.IRoute;
-import io.rollhax.nextripdomain.models.IStop;
+import io.rollhax.nextripdomain.models.Departure;
+import io.rollhax.nextripdomain.models.Route;
+import io.rollhax.nextripdomain.models.Stop;
 import io.rollhax.nextripdomain.types.DirectionType;
 
 public interface INextripService {
-    Observable<List<IRoute>> getRoutes();
+    Observable<List<Route>> getRoutes();
 
     Observable<List<DirectionType>> getDirections(String route);
 
-    Observable<List<IStop>> getStops(String route, String direction);
+    Observable<List<Stop>> getStops(String route, String direction);
 
-    Observable<List<IDeparture>> getDepartures(int stopId);
+    Observable<List<Departure>> getDepartures(int stopId);
 }

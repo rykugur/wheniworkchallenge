@@ -1,7 +1,6 @@
 package io.rollhax.nextripdomain.models;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -23,7 +22,6 @@ import io.rollhax.utils.serialization.json.annotations.SkipAutomaticDeserializat
 import io.rollhax.utils.serialization.json.annotations.SkipAutomaticSerialization;
 
 public class Departure implements IDeparture {
-
 
     @SerializedName(Json.ACTUAL)
     private boolean mActual;

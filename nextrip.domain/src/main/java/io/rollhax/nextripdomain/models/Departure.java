@@ -44,11 +44,11 @@ public class Departure implements IDeparture {
     @SerializedName(Json.TERMINAL)
     private String mTerminal;
     @SerializedName(Json.VEHICLE_HEADING)
-    private long mVehicleHeading;
+    private double mVehicleHeading;
     @SerializedName(Json.VEHICLE_LATITUDE)
-    private long mVehicleLatitude;
+    private double mVehicleLatitude;
     @SerializedName(Json.VEHICLE_LONGITUDE)
-    private long mVehicleLongitude;
+    private double mVehicleLongitude;
 
     private Departure() {
     }
@@ -155,34 +155,34 @@ public class Departure implements IDeparture {
 
     @Override
     @Nullable
-    public long getVehicleHeading() {
+    public double getVehicleHeading() {
         return mVehicleHeading;
     }
 
     @Override
-    public void setVehicleHeading(long vehicleHeading) {
+    public void setVehicleHeading(double vehicleHeading) {
         mVehicleHeading = vehicleHeading;
     }
 
     @Override
     @Nullable
-    public long getVehicleLatitude() {
+    public double getVehicleLatitude() {
         return mVehicleLatitude;
     }
 
     @Override
-    public void setVehicleLatitude(long vehicleLatitude) {
+    public void setVehicleLatitude(double vehicleLatitude) {
         mVehicleLatitude = vehicleLatitude;
     }
 
     @Override
     @Nullable
-    public long getVehicleLongitude() {
+    public double getVehicleLongitude() {
         return mVehicleLongitude;
     }
 
     @Override
-    public void setVehicleLongitude(long vehicleLongitude) {
+    public void setVehicleLongitude(double vehicleLongitude) {
         mVehicleLongitude = vehicleLongitude;
     }
     //endregion
@@ -204,9 +204,9 @@ public class Departure implements IDeparture {
         mRoute = in.readString();
         mRouteDirection = DirectionType.from(in.readInt());
         mTerminal = in.readString();
-        mVehicleHeading = in.readLong();
-        mVehicleLatitude = in.readLong();
-        mVehicleLongitude = in.readLong();
+        mVehicleHeading = in.readDouble();
+        mVehicleLatitude = in.readDouble();
+        mVehicleLongitude = in.readDouble();
     }
 
     @Override
@@ -220,9 +220,9 @@ public class Departure implements IDeparture {
         parcel.writeString(mRoute);
         parcel.writeInt(mRouteDirection.getServerId());
         parcel.writeString(mTerminal);
-        parcel.writeLong(mVehicleHeading);
-        parcel.writeLong(mVehicleLatitude);
-        parcel.writeLong(mVehicleLongitude);
+        parcel.writeDouble(mVehicleHeading);
+        parcel.writeDouble(mVehicleLatitude);
+        parcel.writeDouble(mVehicleLongitude);
     }
 
     public static final Creator<Departure> CREATOR = new Creator<Departure>() {

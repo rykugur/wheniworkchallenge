@@ -70,17 +70,17 @@ public interface IDeparture extends Parcelable {
     void setTerminal(String terminal);
 
     @Nullable
-    long getVehicleHeading();
+    double getVehicleHeading();
 
-    void setVehicleHeading(long vehicleHeading);
-
-    @Nullable
-    long getVehicleLatitude();
-
-    void setVehicleLatitude(long vehicleLatitude);
+    void setVehicleHeading(double vehicleHeading);
 
     @Nullable
-    long getVehicleLongitude();
+    double getVehicleLatitude();
 
-    void setVehicleLongitude(long vehicleLongitude);
+    void setVehicleLatitude(double vehicleLatitude);
+
+    @Nullable
+    double getVehicleLongitude();
+
+    void setVehicleLongitude(double vehicleLongitude);
 }

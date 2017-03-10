@@ -8,27 +8,27 @@ import io.rollhax.nextripdomain.types.DirectionType;
 
 public interface IDepartureViewModel extends Parcelable {
 
-    public boolean isActual();
+    boolean isActual();
 
-    public int getBlockNumber();
+    int getBlockNumber();
 
-    public String getDepartureText();
+    String getDepartureText();
 
-    public Date getDepartureTime();
+    Date getDepartureTime();
 
-    public String getDescription();
+    String getDescription();
 
-    public String getGate();
+    String getGate();
 
-    public String getRoute();
+    String getRoute();
 
-    public DirectionType getRouteDirection();
+    DirectionType getRouteDirection();
 
-    public String getTerminal();
+    String getTerminal();
 
-    public long getVehicleHeading();
+    double getVehicleHeading();
 
-    public long getVehicleLatitude();
+    double getVehicleLatitude();
 
-    public long getVehicleLongitude();
+    double getVehicleLongitude();
 }

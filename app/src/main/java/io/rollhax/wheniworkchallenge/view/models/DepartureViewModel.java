@@ -62,17 +62,17 @@ public class DepartureViewModel implements IDepartureViewModel {
     }
 
     @Override
-    public long getVehicleHeading() {
+    public double getVehicleHeading() {
         return mWrappedDeparture.getVehicleHeading();
     }
 
     @Override
-    public long getVehicleLatitude() {
+    public double getVehicleLatitude() {
         return mWrappedDeparture.getVehicleLatitude();
     }
 
     @Override
-    public long getVehicleLongitude() {
+    public double getVehicleLongitude() {
         return mWrappedDeparture.getVehicleLongitude();
     }
     //endregion

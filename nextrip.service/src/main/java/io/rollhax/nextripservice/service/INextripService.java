@@ -17,5 +17,7 @@ public interface INextripService {
 
     Observable<List<Stop>> getStops(String route, String direction);
 
-    Observable<List<Departure>> getDepartures(int stopId);
+    Observable<List<Departure>> getDepartures(String route, int directionTypeId, String stopId);
+
+    Observable<List<Departure>> getDepartures(String route, String direction, String stopId);
 }

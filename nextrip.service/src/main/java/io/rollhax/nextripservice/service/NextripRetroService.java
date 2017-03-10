@@ -101,15 +101,20 @@ public class NextripRetroService implements INextripService {
     }
 
     @Override
-    public Observable<List<Departure>> getDepartures(int stopId) {
-        return mNextripApi.getDepartures(stopId)
-            .compose(FlattenCollection.of(Departure.class))
-                    // get rid of junk data
-                    .filter(FilterNull.of(Departure.class))
-                    .toList()
-                    .toObservable()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread());
+    public Observable<List<Departure>> getDepartures(String route, int directionTypeId, String stopId) {
+        return getDepartures(route, String.valueOf(directionTypeId), stopId);
+    }
+
+    @Override
+    public Observable<List<Departure>> getDepartures(String route, String direction, String stopId) {
+        return mNextripApi.getDepartures(stopId, direction, stopId)
+                .compose(FlattenCollection.of(Departure.class))
+                // get rid of junk data
+                .filter(FilterNull.of(Departure.class))
+                .toList()
+                .toObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
     //endregion
 

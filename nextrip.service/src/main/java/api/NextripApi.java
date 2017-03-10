@@ -21,6 +21,8 @@ public interface NextripApi {
     Observable<List<TextValuePair>> getStops(@Path("ROUTE") String route,
                                      @Path("DIRECTION") String direction);
 
-    @GET("{STOPID}")
-    Observable<List<Departure>> getDepartures(@Path("STOPID") int stopId);
+    @GET("{ROUTE}/{DIRECTION}/{STOP}")
+    Observable<List<Departure>> getDepartures(@Path("ROUTE") String route,
+                                              @Path("DIRECTION") String direction,
+                                              @Path("STOP") String stopId);
 }

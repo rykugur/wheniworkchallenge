@@ -251,8 +251,8 @@ public class Departure implements IDeparture {
             if (root.has(Json.ROUTE_DIRECTION)) {
                 JsonElement direction = root.get(Json.ROUTE_DIRECTION);
                 if (direction != null && !direction.isJsonNull() && direction.isJsonPrimitive()) {
-                    int directionId = direction.getAsInt();
-                    departure.setRouteDirection(DirectionType.from(directionId));
+                    String directionString = direction.getAsString();
+                    departure.setRouteDirection(DirectionType.from(directionString));
                 }
             }
 
@@ -268,7 +268,7 @@ public class Departure implements IDeparture {
             // parse some fields automagically
             JsonObject root = GSON.toJsonTree(src, Departure.class).getAsJsonObject();
 
-            root.addProperty(Json.ROUTE_DIRECTION, src.mRouteDirection.getServerId());
+            root.addProperty(Json.ROUTE_DIRECTION, src.mRouteDirection.getServerString());
 
             return null;
         }

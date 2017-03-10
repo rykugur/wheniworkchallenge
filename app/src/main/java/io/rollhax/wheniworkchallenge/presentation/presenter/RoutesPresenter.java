@@ -1,7 +1,5 @@
 package io.rollhax.wheniworkchallenge.presentation.presenter;
 
-import android.util.Log;
-
 import java.util.List;
 
 import io.reactivex.Observer;
@@ -50,7 +48,7 @@ public class RoutesPresenter implements IRoutesPresenter {
     private final Observer<List<IRouteViewModel>> mRoutesObserver = new Observer<List<IRouteViewModel>>() {
         @Override
         public void onSubscribe(Disposable d) {
-            Log.d(TAG, "onSubscribe: ");
+            // no-op
         }
 
         @Override
@@ -58,8 +56,6 @@ public class RoutesPresenter implements IRoutesPresenter {
             if (mPresentation == null) {
                 return;
             }
-
-            Log.d(TAG, "onNext: routes.size=" + routes.size());
 
             mPresentation.showProgress(false);
             mPresentation.setListItems(routes);
@@ -72,14 +68,12 @@ public class RoutesPresenter implements IRoutesPresenter {
                 return;
             }
 
-            Log.d(TAG, "onError: e=" + e.getMessage());
-
             mPresentation.showError(R.string.routes_list_error_refresh);
         }
 
         @Override
         public void onComplete() {
-            Log.d(TAG, "onComplete: ");
+            // no-op
         }
     };
     //endregion
@@ -87,11 +81,6 @@ public class RoutesPresenter implements IRoutesPresenter {
     //region Private helpers
     // TODO: sorting
     private void refreshRoutes() {
-        if (mPresentation == null) {
-            return;
-        }
-
-        mPresentation.showProgress(true);
         mNextripService.getRoutes()
                 .compose(FlattenCollection.of(Route.class))
                 .filter(FilterNull.of(Route.class))
@@ -99,6 +88,20 @@ public class RoutesPresenter implements IRoutesPresenter {
                 .toList()
                 .toObservable()
                 .subscribe(mRoutesObserver);
+    }
+    //endregion
+
+    //region Testing
+    /* package */ IRoutesListView getPresentation() {
+        return mPresentation;
+    }
+
+    /* package */ void setPresentation(IRoutesListView presentation) {
+        mPresentation = presentation;
+    }
+
+    /* package */ void setNextripService(INextripService nextripService) {
+        mNextripService = nextripService;
     }
     //endregion
 }

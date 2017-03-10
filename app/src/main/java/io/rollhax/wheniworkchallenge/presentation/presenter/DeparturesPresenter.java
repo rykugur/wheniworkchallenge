@@ -1,7 +1,5 @@
 package io.rollhax.wheniworkchallenge.presentation.presenter;
 
-import android.util.Log;
-
 import java.util.List;
 
 import io.reactivex.Observer;
@@ -55,7 +53,7 @@ public class DeparturesPresenter implements IDeparturesPresenter {
     private final Observer<List<IDepartureViewModel>> mDeparturesObserver = new Observer<List<IDepartureViewModel>>() {
         @Override
         public void onSubscribe(Disposable d) {
-            Log.d(TAG, "onSubscribe: ");
+            // no-op
         }
 
         @Override
@@ -63,8 +61,6 @@ public class DeparturesPresenter implements IDeparturesPresenter {
             if (mPresentation == null) {
                 return;
             }
-
-            Log.d(TAG, "onNext: departures.size=" + departures.size());
 
             mPresentation.showProgress(false);
             mPresentation.setListItems(departures);
@@ -77,14 +73,12 @@ public class DeparturesPresenter implements IDeparturesPresenter {
                 return;
             }
 
-            Log.d(TAG, "onError: e=" + e.getMessage());
-
             mPresentation.showError(R.string.stops_list_error_refresh);
         }
 
         @Override
         public void onComplete() {
-            Log.d(TAG, "onComplete: ");
+            // no-op
         }
     };
     //endregion
@@ -97,6 +91,32 @@ public class DeparturesPresenter implements IDeparturesPresenter {
                 .toList()
                 .toObservable()
                 .subscribe(mDeparturesObserver);
+    }
+    //endregion
+
+    //region Testing
+    /* package */ IDeparturesListView getPresentation() {
+        return mPresentation;
+    }
+
+    /* package */ void setPresentation(IDeparturesListView presentation) {
+        mPresentation = presentation;
+    }
+
+    /* package */ void setNextripService(INextripService nextripService) {
+        mNextripService = nextripService;
+    }
+
+    /* package */ void setRoute(String route) {
+        mRoute = route;
+    }
+
+    /* package */ void setDirectionType(DirectionType directionType) {
+        mDirectionType = directionType;
+    }
+
+    /* package */ void setStopId(String stopId) {
+        mStopId = stopId;
     }
     //endregion
 }

@@ -1,7 +1,5 @@
 package io.rollhax.wheniworkchallenge.presentation.presenter;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +61,7 @@ public class StopsPresenter implements IStopsPresenter {
             new Observer<List<IStopViewModel>>() {
         @Override
         public void onSubscribe(Disposable d) {
-            Log.d(TAG, "onSubscribe: ");
+            // no-op
         }
 
         @Override
@@ -71,8 +69,6 @@ public class StopsPresenter implements IStopsPresenter {
             if (mPresentation == null) {
                 return;
             }
-
-            Log.d(TAG, "onNext: stops.size=" + stops.size());
 
             mPresentation.showProgress(false);
             mPresentation.setListItems(stops);
@@ -85,14 +81,12 @@ public class StopsPresenter implements IStopsPresenter {
                 return;
             }
 
-            Log.d(TAG, "onError: e=" + e.getMessage());
-
             mPresentation.showError(R.string.stops_list_error_refresh);
         }
 
         @Override
         public void onComplete() {
-            Log.d(TAG, "onComplete: ");
+            // no-op
         }
     };
     //endregion
@@ -136,6 +130,20 @@ public class StopsPresenter implements IStopsPresenter {
                     }
                 })
                 .subscribe(mStopsObserver);
+    }
+    //endregion
+
+    //region Testing
+    /* package */ IStopsListView getPresentation() {
+        return mPresentation;
+    }
+
+    /* package */ void setPresentation(IStopsListView presentation) {
+        mPresentation = presentation;
+    }
+
+    /* package */ void setNextripService(INextripService nextripService) {
+        mNextripService = nextripService;
     }
     //endregion
 }

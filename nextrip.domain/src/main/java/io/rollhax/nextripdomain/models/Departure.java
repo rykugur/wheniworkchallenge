@@ -260,6 +260,7 @@ public class Departure implements IDeparture {
                 if (time != null && !time.isJsonNull() && time.isJsonPrimitive()) {
                     String timeString = time.getAsString();
                     timeString = timeString.replace("/Date(", "");
+                    // TODO: we're losing timezone information, fix that
                     timeString = timeString.substring(0, timeString.indexOf("-"));
                     try {
                         long timeMs = Long.parseLong(timeString);

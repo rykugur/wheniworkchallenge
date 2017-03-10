@@ -29,6 +29,8 @@ import io.rollhax.wheniworkchallenge.presentation.presenter.StopsPresenter;
 import io.rollhax.wheniworkchallenge.view.IStopsListView;
 import io.rollhax.wheniworkchallenge.view.models.IStopViewModel;
 
+// TODO: ideally we'd have a tab for each direction, or an expandable container, or something
+// due to time constraints, it all goes into a list.
 public class StopsListActivity extends AppCompatActivity implements IStopsListView {
 
     private static final String TAG = StopsListActivity.class.getSimpleName();

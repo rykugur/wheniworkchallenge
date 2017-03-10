@@ -35,7 +35,6 @@ public class GsonFactory {
                 // register deserializers
                 .registerTypeAdapter(Departure.class, new Departure.CustomDeserializer())
                 // register serializers
-                .registerTypeAdapter(Departure.class, new Departure.CustomSerializer())
 
                 .create();
     }

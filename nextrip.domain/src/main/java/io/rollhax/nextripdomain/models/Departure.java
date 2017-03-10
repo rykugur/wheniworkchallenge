@@ -31,6 +31,8 @@ public class Departure implements IDeparture {
     @SerializedName(Json.DEPARTURE_TEXT)
     private String mDepartureText;
     @SerializedName(Json.DEPARTURE_TIME)
+    @SkipAutomaticSerialization
+    @SkipAutomaticDeserialization
     private Date mDepartureTime;
     @SerializedName(Json.DESCRIPTION)
     private String mDescription;
@@ -251,6 +253,23 @@ public class Departure implements IDeparture {
 
             JsonObject root = json.getAsJsonObject();
 
+            // this is a disgusting time format
+            // TODO: surely there's a library or DateFormat that can handle this.
+            if (root.has(Json.DEPARTURE_TIME)) {
+                JsonElement time = root.get(Json.DEPARTURE_TIME);
+                if (time != null && !time.isJsonNull() && time.isJsonPrimitive()) {
+                    String timeString = time.getAsString();
+                    timeString = timeString.replace("/Date(", "");
+                    timeString = timeString.substring(0, timeString.indexOf("-"));
+                    try {
+                        long timeMs = Long.parseLong(timeString);
+                        departure.setDepatureTime(new Date(timeMs));
+                    } catch (NumberFormatException e) {
+                        departure.setDepartureText(null);
+                    }
+                }
+            }
+
             if (root.has(Json.ROUTE_DIRECTION)) {
                 JsonElement direction = root.get(Json.ROUTE_DIRECTION);
                 if (direction != null && !direction.isJsonNull() && direction.isJsonPrimitive()) {
@@ -260,20 +279,6 @@ public class Departure implements IDeparture {
             }
 
             return departure;
-        }
-    }
-
-    public static class CustomSerializer implements JsonSerializer<Departure> {
-        private static final Gson GSON = GsonFactory.getDefault();
-
-        @Override
-        public JsonElement serialize(Departure src, Type typeOfSrc, JsonSerializationContext context) {
-            // parse some fields automagically
-            JsonObject root = GSON.toJsonTree(src, Departure.class).getAsJsonObject();
-
-            root.addProperty(Json.ROUTE_DIRECTION, src.mRouteDirection.getServerString());
-
-            return null;
         }
     }
     //endregion

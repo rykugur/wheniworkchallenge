@@ -85,6 +85,7 @@ public class RoutesPresenter implements IRoutesPresenter {
     //endregion
 
     //region Private helpers
+    // TODO: sorting
     private void refreshRoutes() {
         if (mPresentation == null) {
             return;

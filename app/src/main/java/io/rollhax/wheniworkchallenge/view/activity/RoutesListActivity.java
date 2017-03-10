@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -20,7 +19,6 @@ import butterknife.ButterKnife;
 import io.rollhax.wheniworkchallenge.BuildConfig;
 import io.rollhax.wheniworkchallenge.R;
 import io.rollhax.wheniworkchallenge.adapter.RoutesListAdapter;
-import io.rollhax.wheniworkchallenge.adapter.StopsListAdapter;
 import io.rollhax.wheniworkchallenge.listener.IRouteClickListener;
 import io.rollhax.wheniworkchallenge.presentation.presenter.IRoutesPresenter;
 import io.rollhax.wheniworkchallenge.presentation.presenter.RoutesPresenter;
@@ -101,7 +99,7 @@ public class RoutesListActivity extends AppCompatActivity implements IRoutesList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_routes, menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
         return true;
     }
 

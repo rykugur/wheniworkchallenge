@@ -149,7 +149,8 @@ public class StopsListActivity extends AppCompatActivity implements IStopsListVi
     private final IStopClickListener mStopClickListener = new IStopClickListener() {
         @Override
         public void onStopClicked(IStopViewModel stop) {
-            Log.d(TAG, "onStopClicked: stop=" + stop.getStopId() + ", direction=" + stop.getDirectionType().name());
+            DeparturesListActivity.startDeparturesListActivity(StopsListActivity.this, mRoute,
+                    stop.getDirectionType(), stop.getStopId());
         }
     };
     //endregion

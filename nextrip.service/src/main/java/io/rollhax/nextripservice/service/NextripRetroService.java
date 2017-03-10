@@ -107,7 +107,7 @@ public class NextripRetroService implements INextripService {
 
     @Override
     public Observable<List<Departure>> getDepartures(String route, String direction, String stopId) {
-        return mNextripApi.getDepartures(stopId, direction, stopId)
+        return mNextripApi.getDepartures(route, direction, stopId)
                 .compose(FlattenCollection.of(Departure.class))
                 // get rid of junk data
                 .filter(FilterNull.of(Departure.class))

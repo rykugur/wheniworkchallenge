@@ -10,4 +10,8 @@
     <string name="stops_list_title">Stops</string>
     <string name="stops_list_error_refresh">Error refreshing stops</string>
     <string name="stops_list_direction_format">Direction: %1$s</string>
+
+    <!--DeparturesListActivity-->
+    <string name="departures_list_title">Departures</string>
+    <string name="departures_list_error_refresh">Error refreshing departures</string>
 </resources>

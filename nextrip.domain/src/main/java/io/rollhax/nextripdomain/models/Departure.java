@@ -14,6 +14,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.util.Date;
 
 import io.rollhax.nextripdomain.GsonFactory;
@@ -240,7 +241,9 @@ public class Departure implements IDeparture {
 
     //region Serdes
     public static class CustomDeserializer implements JsonDeserializer<Departure> {
-        private static final Gson GSON = GsonFactory.getDefault();
+        private static final Gson GSON = GsonFactory.newBuilder()
+                .setDateFormat(DateFormat.FULL)
+                .create();
 
         @Override
         public Departure deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {

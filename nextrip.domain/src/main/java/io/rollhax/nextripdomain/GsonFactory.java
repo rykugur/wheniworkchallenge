@@ -21,11 +21,16 @@ public class GsonFactory {
         return DEFAULT;
     }
 
+    public static GsonBuilder newBuilder() {
+        return new GsonBuilder()
+                .addDeserializationExclusionStrategy(new DeserializationStrategy())
+                .addSerializationExclusionStrategy(new SerializationStrategy());
+    }
+
     private static Gson buildGson() {
         return new GsonBuilder()
                 .addDeserializationExclusionStrategy(new DeserializationStrategy())
                 .addSerializationExclusionStrategy(new SerializationStrategy())
-                .setDateFormat(DateFormat.FULL)
 
                 // register deserializers
                 .registerTypeAdapter(Departure.class, new Departure.CustomDeserializer())

@@ -1,13 +1,15 @@
 package io.rollhax.wheniworkchallenge.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
 
-import io.rollhax.wheniworkchallenge.listener.IStopClickListener;
-import io.rollhax.wheniworkchallenge.view.IStopItemView;
+import io.rollhax.wheniworkchallenge.R;
+import io.rollhax.wheniworkchallenge.view.DepartureView;
+import io.rollhax.wheniworkchallenge.view.IDepartureItemView;
 import io.rollhax.wheniworkchallenge.view.models.IDepartureViewModel;
 
 public class DeparturesListAdapter extends RecyclerView.Adapter<DeparturesListAdapter.ViewHolder> {
@@ -21,17 +23,15 @@ public class DeparturesListAdapter extends RecyclerView.Adapter<DeparturesListAd
     //region Adapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        StopView view = (StopView) LayoutInflater.from(parent.getContext())
-//                .inflate(R.layout.view_stop_inflatable, parent, false);
-//        view.setStopClickListener(mListener);
-//        return new ViewHolder(view);
-        return null;
+        DepartureView view = (DepartureView) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.view_departure_inflatable, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        IStopViewModel viewModel = mDepartures.get(position);
-//        holder.mView.showStop(viewModel);
+        IDepartureViewModel viewModel = mDepartures.get(position);
+        holder.mView.showDeparture(viewModel);
     }
 
     @Override
@@ -47,12 +47,12 @@ public class DeparturesListAdapter extends RecyclerView.Adapter<DeparturesListAd
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-//        IStopItemView mView;
+        IDepartureItemView mView;
 
         ViewHolder(View itemView) {
             super(itemView);
 
-//            mView = (IStopItemView) itemView;
+            mView = (IDepartureItemView) itemView;
         }
     }
 }
